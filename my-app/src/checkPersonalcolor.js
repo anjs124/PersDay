@@ -2,7 +2,7 @@ function getSeasonalTone(hairR, hairG, hairB, hairH, hairS, hairV, faceR, faceG,
     if(hairR===0 && hairG===0 && hairB===0 && hairH===0 && hairS===0 && hairV===0 && faceR===0 && faceG===0 && faceB===0 && faceH===0 && faceS===0 && faceV===0){
         return " ";
     }else{
-        let cool = 0; // cool 변수 초기화
+        let cool = 0;
         if (hairV < 20 || (hairV < 50 && (hairR === 0 || hairG === 0)) || (hairV < 50 && hairB > 100)) {
             cool++;
         }

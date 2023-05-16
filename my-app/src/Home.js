@@ -14,15 +14,21 @@ function Home() {
   const [loading, setLoading] = useState(true);
   
 
-  const handleResultClick = () => {
-    window.location.href = `/result/${tonename}`
+  const handleResultClick = (event) => {
+    
+    event.preventDefault();
+    
+    
+    setTimeout(() => {
+      window.location.href = `/result/${tonename}`;
+    }, 500);
   };
 
   const getLocationAndWeather = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
-        const API_KEY = '0b1fa4dca85cfc7afeb10e6099111306'; // OpenWeatherMap API Key
+        const API_KEY = '0b1fa4dca85cfc7afeb10e6099111306'; 
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
 
         axios.get(url)
@@ -41,10 +47,8 @@ function Home() {
 
     
   }, []);
-
   
-
-  
+ 
   
   const onFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -52,24 +56,58 @@ function Home() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-
+  
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('filepath', selectedFile.webkitRelativePath); // 파일 경로 추가
-
+    formData.append('filepath', selectedFile.name);
+  
     console.log(formData);
-
-    axios.post('http://localhost:5000/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    })
-      .then(response => {
+  
+    // 5000 서버로 이미지 전송
+    axios
+      .post('http://localhost:5000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
+  
+        // 4000 서버로 이미지 전송
+      axios
+      .post('http://localhost:4000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        console.log("한번실행됨")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      // 4000 서버로부터 결과 데이터를 받아오기
+      axios
+        .get('http://localhost:4000/result')
+        .then((response) => {
+          console.log(response.data);
+          
+      })
+      .then((response) => {
+          console.log(response.data);
+      })
+      
+      .catch((error) => {
+        console.log(error);
+      });
+          
+      
   };
 
   useEffect(() => {
@@ -119,14 +157,13 @@ function Home() {
             <button id="analysis-button" type="submit">분석하기</button>            
             <button onClick={handleResultClick}>결과 보기</button>
         </form>
-        <div >
-            <h2>{weather.name}</h2>
-            <img src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt="Weather Icon" />
-            <p>{weather.weather[0].description}</p>
-            <p>기온: {weather.main.temp}°C</p>
-            <p>Feels like: {weather.main.feels_like}°C</p>
-            <p>습도: {weather.main.humidity}%</p>
-        </div>
+        <h2>{weather.name}</h2>
+        <img src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt="Weather Icon" />
+        <p>{weather.weather[0].description}</p>
+        <p>기온: {weather.main.temp}°C</p>
+        <p>Feels like: {weather.main.feels_like}°C</p>
+        <p>습도: {weather.main.humidity}%</p>
+        
         <WebcamCapture />
 
         <div className="rgbhsv-info">

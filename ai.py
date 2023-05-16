@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-from flask import jsonify
+from flask import jsonify, url_for
+import os
 
 
 # 전역 변수로 선언
@@ -77,6 +78,23 @@ def result():
     
     # JSON으로 변환하여 반환합니다.
     return jsonify(result_dict)
+
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/images/<tonename>')
+def get_images(tonename):
+    image_names = []
+    folder_path = os.path.join(app.config['UPLOAD_FOLDER'], tonename)
+    
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.jpg') or filename.endswith('.png'):
+            image_names.append(filename)
+    urls = []
+    for name in image_names:
+        url = url_for('static', filename=f'uploads/{tonename}/{name}')
+        urls.append(url[1:])
+    return jsonify(urls)
 
 if __name__ == "__main__":
     app.run()
