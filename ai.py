@@ -79,6 +79,10 @@ def result():
     # JSON으로 변환하여 반환합니다.
     return jsonify(result_dict)
 
+
+
+
+
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -86,15 +90,43 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def get_images(tonename):
     image_names = []
     folder_path = os.path.join(app.config['UPLOAD_FOLDER'], tonename)
-    
-    for filename in os.listdir(folder_path):
-        if filename.endswith('.jpg') or filename.endswith('.png'):
-            image_names.append(filename)
+
+    # "봄", "여름", "가을", "겨울" 폴더들의 경로를 생성
+    season_folders = [os.path.join(folder_path, season) for season in ["봄", "여름", "가을", "겨울"]]
+
+    # 모든 폴더에서 이미지 파일을 찾아서 리스트에 추가
+    for season_folder in season_folders:
+        if os.path.isdir(season_folder):
+            for filename in os.listdir(season_folder):
+                if filename.endswith('.jpg') or filename.endswith('.png'):
+                    image_names.append(os.path.join(season_folder, filename))
+
+    # URL 리스트 생성
     urls = []
-    for name in image_names:
-        url = url_for('static', filename=f'uploads/{tonename}/{name}')
-        urls.append(url[1:])
+    for image_name in image_names:
+        url = f"{image_name}"
+        urls.append(url)
+
     return jsonify(urls)
+
+@app.route('/images/<tonename>/<season>')
+def get_images2(tonename, season):
+    image_names = []
+    folder_path = os.path.join(app.config['UPLOAD_FOLDER'], tonename, season)
+
+    if os.path.isdir(folder_path):
+        for filename in os.listdir(folder_path):
+            if filename.endswith('.jpg') or filename.endswith('.png'):
+                image_names.append(os.path.join(folder_path, filename))
+
+    urls = []
+    for image_name in image_names:
+        url = f"{image_name}"
+        urls.append(url)
+
+    return jsonify(urls)
+
+
 
 if __name__ == "__main__":
     app.run()

@@ -3,10 +3,10 @@ function getSeasonalTone(hairR, hairG, hairB, hairH, hairS, hairV, faceR, faceG,
         return " ";
     }else{
         let cool = 0;
-        if (hairV < 20 || (hairV < 50 && (hairR === 0 || hairG === 0)) || (hairV < 50 && hairB > 100)) {
+        if (hairV < 20 || (hairV < 50 && (hairR === 0 || hairG === 0)) || (hairV < 50 && hairB > 100) ) {
             cool++;
         }
-        if (faceH < 33 || faceH > 300) {
+        if (faceH < 33 || faceH > 300 || faceS<30) {
             cool++;
         }
         if (cool >= 1) {
