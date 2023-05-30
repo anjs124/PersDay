@@ -3,6 +3,7 @@ import Result from './Result';
 import Home from './Home';
 import Introduction from './Introduction';
 import Season from "./Season";
+import Weather from "./Weather";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/result/:tonename" element={<Result />} />
         <Route path="/result/:tonename/:season" element={<Season />} />
-        {/* <Route path="/result/:tonename/:weather" element={<Weather />} /> */}
+        <Route path="/result/:tonename/:season/weather" element={<Weather />} />
       </Routes>
     </Router>
   );

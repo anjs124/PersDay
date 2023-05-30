@@ -15,6 +15,8 @@ function Season() {
   const { tonename } = useParams();
   const imagesPerPage = 16; // 한 페이지에 표시할 이미지 수입니다.
 
+  
+
   useEffect(() => {
     const season = getSeason(); // getSeason() 함수를 사용하여 현재 시즌 값을 가져옴
 
@@ -116,6 +118,9 @@ function Season() {
         </Link>
         <Link to={`/result/${tonename}`}>
           <button style={{ marginTop: '1rem' }}>이전 페이지로 이동</button>
+        </Link>
+        <Link to={`/result/${tonename}/${getSeason()}/weather`}>
+          <button style={{ marginTop: '1rem' }}>다음 페이지로 이동</button>
         </Link>
       </div>
     </div>
